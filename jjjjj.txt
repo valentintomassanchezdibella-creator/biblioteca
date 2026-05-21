@@ -1,0 +1,119 @@
+if (pagina !== "aic"){
+  function CrearCarrusel(section){
+
+    const WrapperContainer = section.querySelector(".container")
+    const wrappers = section.querySelectorAll(".wrapper-inner");
+
+    const btnPrev = section.querySelector(".botones button:first-child");
+    const btnNext = section.querySelector(".botones button:last-child");
+
+    let index = Math.floor(wrappers.length/2);
+
+    function updateCarousel(){
+      wrappers.forEach(w => w.classList.remove("active"));
+      wrappers[index].classList.add("active");
+
+      const wrapper = wrappers[index];
+      console.log(wrapper);
+
+      const ContainerRect = WrapperContainer.getBoundingClientRect();
+      const WrapperRect = wrapper.getBoundingClientRect();
+      console.log(ContainerRect);
+      console.log(WrapperRect);
+
+      const offset = (WrapperRect.left + WrapperRect.width / 2) - (ContainerRect.left + ContainerRect.width / 2);
+
+      WrapperContainer.style.transform = `translateX(${-offset}px)`;
+    }
+
+    btnNext.addEventListener("click", () =>{
+      index ++;
+      
+      if(index > wrappers.length-1){
+        index = 0;
+      }
+      
+      updateCarousel();
+    })
+
+    btnPrev.addEventListener("click", () =>{
+      index --;
+
+      if(index < 0){
+        index = wrappers.length-1;
+      }
+      
+      updateCarousel();
+
+    })
+
+    updateCarousel();
+    window.addEventListener('resize', () => {
+      updateCarousel();
+    });
+  }
+
+  const carruseles = document.querySelectorAll(".galeria-section");
+
+  carruseles.forEach(section => {
+    CrearCarrusel(section);
+  })
+
+}
+
+
+const datos = [
+  {
+    id:1,
+    titulo:"hola",
+    fecha: "222222",
+    sintesis: "sintesis",
+    descripcion: "Descripcion",
+    imagen: "fotos/index/fto4.avif"
+  },
+  {
+    id:2,
+    titulo:"holhhha",
+    fecha: "22222hhh2",
+    sintesis: "sintehhhsis",
+    descripcion: "Descrhhhipcion",
+    imagen: "fotos/index/fto3.avif"
+  },
+]
+
+function MostrarNoticia(item){
+  const noticia = document.getElementById("noticia-completa");
+
+  noticia.innerHTML = `
+  <h2>${item.titulo}</h2>
+  `;
+}
+
+function CrearCarruselDinamico(contenedorId, datos){
+  const contenedor = document.getElementById(contenedorId);
+
+  datos.forEach(item => {
+    const card = document.createElement("div");
+    card.classList.add("wrapper");
+
+    const CardInner = document.createElement("div");
+    CardInner.classList.add("wrapper-inner");
+
+    CardInner.innerHTML = `
+    <img src="${item.imagen}">
+    <h4>${item.titulo}</h4>
+    `;
+    card.appendChild(CardInner);
+
+    card.addEventListener("click", () => {
+      MostrarNoticia(item);
+    })
+
+    contenedor.appendChild(card);
+
+  })
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  CrearCarruselDinamico("galeria-noticias", noticias);
+})
